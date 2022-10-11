@@ -9,20 +9,25 @@ import {
 } from './modules/crud';
 import isComplete from './modules/competetask';
 
-let tasks;
+let tasks = [];
+const enterBtn = document.querySelector('.submit-button');
+const input = document.querySelector('#add-input');
+const clearLink = document.querySelector('.link');
+const edittables = document.querySelectorAll('[contenteditable]');
+const checkBoxs = document.querySelectorAll('.checkbox');
 
 tasks = loadStorage();
 
 const displayTasks = (tasks) => {
   const todoTitle = document.querySelector('.page-title');
+  const inputField = document.querySelector('.input');
+  const todoContainer = document.querySelector('.todo-list');
   todoTitle.innerHTML = `<h1>Today's To Do</h1>
   <img class="icon" src="${iconRefrech}" alt="refresh">`;
 
-  const inputField = document.querySelector('.input');
   inputField.innerHTML = `<input id="add-input" type="text" placeholder="Add to your list...">
   <a class="submit-button" type="submit"><img class="icon" src="${iconEnter}" alt="enter-key"></a>`;
 
-  const todoContainer = document.querySelector('.todo-list');
   tasks.forEach((task) => {
     const taskContainer = document.createElement('li');
     taskContainer.className = 'task';
@@ -37,10 +42,6 @@ const displayTasks = (tasks) => {
 
 displayTasks(tasks);
 
-const enterBtn = document.querySelector('.submit-button');
-const input = document.querySelector('#add-input');
-const clearLink = document.querySelector('.link');
-
 enterBtn.addEventListener('click', () => {
   if (input.value !== '') {
     tasks = addTask(tasks, input.value);
@@ -49,8 +50,6 @@ enterBtn.addEventListener('click', () => {
     window.location.reload();
   }
 });
-
-const edittables = document.querySelectorAll('[contenteditable]');
 
 edittables.forEach((editable) => {
   const moveIcon = editable.nextElementSibling;
@@ -73,11 +72,11 @@ edittables.forEach((editable) => {
       firstTag === '#text' ? '<br' : `</${firstTag}`,
       'i',
     );
-    const tmp = document.createElement('p');
-    tmp.innerHTML = editable.innerHTML
+    const temporal = document.createElement('p');
+    temporal.innerHTML = editable.innerHTML
       .replace(/<[^>]+>/g, (m) => (keyTag.test(m) ? '{ß®}' : ''))
       .replace(/{ß®}$/, '');
-    const edited = tmp.innerText.replace(/{ß®}/g, '\n');
+    const edited = temporal.innerText.replace(/{ß®}/g, '\n');
 
     const theId = event.target.parentElement.children[0].id;
 
@@ -94,8 +93,6 @@ edittables.forEach((editable) => {
     window.location.reload();
   });
 });
-
-const checkBoxs = document.querySelectorAll('.checkbox');
 
 checkBoxs.forEach((check) => {
   const task = tasks[check.id - 1];
